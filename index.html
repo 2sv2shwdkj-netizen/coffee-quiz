@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Perfect Brew Selector | Your Coffee Page</title>
+    <style>
+        /* --- Basic Reset & Variables --- */
+        :root {
+            --color-primary: #38241A; /* Dark Coffee Brown */
+            --color-secondary: #9F8A7D; /* Light Tan/Cream */
+            --color-accent: #C28E6F; /* Warm Copper */
+            --color-background: #F8F7F5; /* Off-White/Paper */
+            --font-body: 'Georgia', serif;
+            --font-heading: 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--color-primary);
+            background-color: var(--color-background);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        /* --- Layout & Container --- */
+        .container {
+            max-width: 900px; 
+            margin: 0 auto;
+            padding: 30px;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        /* --- Typography --- */
+        h1 {
+            font-family: var(--font-heading);
+            color: var(--color-accent);
+            text-align: center;
+            margin-bottom: 5px;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            font-family: var(--font-heading);
+            font-size: 1.6em;
+            color: var(--color-primary);
+            border-bottom: 2px solid var(--color-accent);
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        
+        h3.carousel-title {
+            font-family: var(--font-heading);
+            font-size: 1.3em;
+            margin-top: 40px;
+            margin-bottom: 15px;
+            color: var(--color-primary);
+        }
+
+        p.intro {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+            color: var(--color-secondary);
+        }
+
+        /* --- Quiz Form Styling --- */
+        .question-group {
+            margin-bottom: 25px;
+            padding: 15px;
+            border-bottom: 1px dashed var(--color-secondary);
+        }
+
+        .question-group label {
+            display: block;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--color-primary);
+        }
+
+        .option {
+            display: inline-block;
+            margin-right: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .option input[type="radio"] {
+            display: none;
+        }
+
+        .option span {
+            display: inline-block;
+            padding: 8px 15px;
+            border: 2px solid var(--color-secondary);
+            border-radius: 5px;
+            transition: all 0.2s;
+            font-size: 0.95em;
+        }
+
+        .option input[type="radio"]:checked + span {
+            background-color: var(--color-accent);
+            color: white;
+            border-color: var(--color-accent);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* --- Button --- */
+        button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-top: 30px;
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #5A392A;
+        }
+
+        /* --- Results Section --- */
+        #results {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid var(--color-accent);
+            display: none; 
+        }
+        
+        #final-method-name {
+            font-size: 2em;
+            color: var(--color-accent);
+            text-align: center;
+            margin: 10px 0 20px 0;
+        }
+
+        /* --- Product Carousel Styling --- */
+        .product-carousel {
+            display: flex;
+            overflow-x: scroll; 
+            gap: 15px;
+            padding: 15px 0; 
+            margin-bottom: 20px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            background: #fafafa;
+        }
+
+        .product-item {
+            flex: 0 0 200px; 
+            text-align: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: white;
+        }
+
+        .product-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            background-color: #e0e0e0; 
+        }
+
+        .product-item p {
+            font-size: 0.9em;
+            font-weight: bold;
+            height: 30px; 
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+        
+        .product-item .price {
+            display: block;
+            font-size: 1.1em;
+            color: var(--color-accent);
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .product-item a {
+            display: block;
+            padding: 6px 10px;
+            background-color: var(--color-primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 3px;
+            font-size: 0.8em;
+            transition: background-color 0.3s;
+        }
+
+        .product-item a:hover {
+            background-color: var(--color-accent);
+        }
+
+        /* --- Footer/Attribution --- */
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.8em;
+            color: var(--color-secondary);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>The Perfect Brew Selector</h1>
+        <p class="intro">Find your ideal coffee ritual in three simple questions. Let's start brewing better!</p>
+
+        <form id="brew-selector-form">
+            <div class="question-group">
+                <label>1. How much time are you willing to spend on your ritual?</label>
+                <div class="options">
+                    <label class="option"><input type="radio" name="time" value="quick" required><span>☕ Less than 5 mins (Speed)</span></label>
+                    <label class="option"><input type="radio" name="time" value="moderate"><span>⏳ 5 - 10 mins (Balanced)</span></label>
+                    <label class="option"><input type="radio" name="time" value="slow"><span>✨ 10+ mins (Mindful/Slow Morning)</span></label>
+                </div>
+            </div>
+
+            <div class="question-group">
+                <label>2. What kind of flavor profile do you prefer?</label>
+                <div class="options">
+                    <label class="option"><input type="radio" name="flavor" value="strong"><span>⚡ Strong, heavy body, bold</span></label>
+                    <label class="option"><input type="radio" name="flavor" value="clean"><span>🍋 Clean, bright, nuanced, transparent</span></label>
+                    <label class="option"><input type="radio" name="flavor" value="rich"><span>🌰 Rich, creamy, balanced, oily</span></label>
+                </div>
+            </div>
+
+            <div class="question-group">
+                <label>3. How much coffee do you usually make?</label>
+                <div class="options">
+                    <label class="option"><input type="radio" name="volume" value="single"><span>One perfect cup</span></label>
+                    <label class="option"><input type="radio" name="volume" value="multiple"><span>2-4 cups / A whole carafe</span></label>
+                </div>
+            </div>
+
+            <button type="submit">Find My Perfect Brew!</button>
+        </form>
+
+        <div id="results">
+            <h2>Your Perfect Match Is...</h2>
+            <h3 id="final-method-name"></h3>
+            <p id="method-description" style="text-align: center; font-style: italic;"></p>
+
+            <h3 class="carousel-title">Your Essential Starter Kit: Everything You Need for <span id="kit-name"></span></h3>
+            <div class="product-carousel" id="recommended-kit-carousel">
+                </div>
+
+            <h3 class="carousel-title">Aesthetic Accessories for Your Slow Morning</h3>
+            <div class="product-carousel" id="accessory-carousel">
+                </div>
+
+            <h3 class="carousel-title">The Ultimate Upgrade: Pro-Grade Espresso</h3>
+            <div class="product-carousel" id="high-ticket-carousel">
+                </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2024 Your Coffee Page. Affiliate links help support slow mornings. ☕</p>
+        </footer>
+    </div>
+
+    <script>
+        const form = document.getElementById('brew-selector-form');
+        const resultsDiv = document.getElementById('results');
+        const finalMethodName = document.getElementById('final-method-name');
+        const methodDescription = document.getElementById('method-description');
+        const recommendedKitCarousel = document.getElementById('recommended-kit-carousel');
+        const kitName = document.getElementById('kit-name');
+        const accessoryCarousel = document.getElementById('accessory-carousel');
+        const highTicketCarousel = document.getElementById('high-ticket-carousel');
+
+
+        // --- PRODUCT DATA TEMPLATE ---
+        // NEW STRUCTURE: { name: "Product Name", price: 00.00, img: "Image URL", link: "Affiliate Link" }
+
+        // Helper function to render product carousels
+        function renderCarousel(carouselElement, products) {
+            carouselElement.innerHTML = ''; // Clear previous content
+            products.forEach(item => {
+                // Determine price display: use price if available, otherwise hide it.
+                const priceDisplay = item.price 
+                    ? `<span class="price">$${item.price.toFixed(2)}</span>` 
+                    : '';
+                
+                const productItem = document.createElement('div');
+                productItem.className = 'product-item';
+                // NOTE: Using item.name, item.img, and item.link
+                productItem.innerHTML = `
+                    <img src="${item.img}" alt="${item.name}">
+                    <p>${item.name}</p>
+                    ${priceDisplay}
+                    <a href="${item.link}" target="_blank" rel="noopener noreferrer">
+                        See on Amazon 🔗
+                    </a>
+                `;
+                carouselElement.appendChild(productItem);
+            });
+        }
+
+        // --- 1. DYNAMIC KIT DATA (You MUST edit the objects within this section) ---
+        const brewMethods = {
+            'espresso': {
+                name: "Espresso Machine (The Power Shot)",
+                kit_title: "Espresso",
+                description: "You need speed and strength! A good entry-level espresso setup delivers the ultimate rich flavor with minimal waiting.",
+                gear: [
+                    // Example Data using your new structure:
+                    { name: "Breville Bambino Espresso Machine", price: 299.95, img: "https://m.media-amazon.com/images/I/61egYXcL9OL._AC_SL1500_.jpg", link: "https://amzn.to/4ay0vft" },
+                    { name: "Grinder (Crucial for Espresso)", price: 159.99, img: "https://m.media-amazon.com/images/I/PLACEHOLDER2.jpg", link: "YOUR_AFFILIATE_LINK_2_ESPRESSO_GRINDER" },
+                    { name: "Tamper & Distributor Tool", price: 35.00, img: "https://m.media-amazon.com/images/I/PLACEHOLDER3.jpg", link: "YOUR_AFFILIATE_LINK_3_TAMPER" },
+                    { name: "Knock Box", price: 20.95, img: "https://m.media-amazon.com/images/I/PLACEHOLDER4.jpg", link: "YOUR_AFFILIATE_LINK_KNOCKBOX" }
+                ]
+            },
+            'aeropress': {
+                name: "AeroPress (The Versatile Workhorse)",
+                kit_title: "AeroPress",
+                description: "Quick, clean, and able to produce everything from a concentrated shot to a full cup. It's the perfect balance of speed and flavor control.",
+                gear: [
+                    { name: "AeroPress Go or Original", price: 39.95, img: "https://m.media-amazon.com/images/I/PLACEHOLDER5.jpg", link: "YOUR_AFFILIATE_LINK_4_AEROPRESS" },
+                    { name: "Basic Hand Burr Grinder", price: 55.00, img: "https://m.media-amazon.com/images/I/PLACEHOLDER6.jpg", link: "YOUR_AFFILIATE_LINK_5_GRINDER" },
+                    { name: "Reusable Metal Filter", price: 18.00, img: "https://m.media-amazon.com/images/I/PLACEHOLDER7.jpg", link: "YOUR_AFFILIATE_LINK_REUSABLE_FILTER" },
+                    { name: "Travel Kettle", price: 34.99, img: "https://m.media-amazon.com/images/I/PLACEHOLDER8.jpg", link: "YOUR_AFFILIATE_LINK_TRAVELKETTLE" }
+                ]
+            },
+            'pourover': {
+                name: "Pour-Over (V60/Chemex - The Mindful Brew)",
+                kit_title: "Pour-Over",
+                description: "You crave nuance and are happy to slow down. Pour-over extracts the cleanest, brightest flavors, ideal for a careful morning ritual.",
+                gear: [
+                    { name: "Hario V60 or Chemex Dripper", price: 22.50, img: "https://m.media-amazon.com/images/I/PLACEHOLDER9.jpg", link: "YOUR_AFFILIATE_LINK_7_POUROVER_DRIPPER" },
+                    { name: "Electric Gooseneck Kettle", price: 69.95, img: "https://m.media-amazon.com/images/I/PLACEHOLDER10.jpg", link: "YOUR_AFFILIATE_LINK_8_GOOSENECK_KETTLE" },
+                    { name: "High-Quality Burr Grinder", price: 180.00, img: "https://m.media-amazon.com/images/I/PLACEHOLDER11.jpg", link: "YOUR_AFFILIATE_LINK_9_GRINDER" },
+                    { name: "V60 Paper Filters", price: 10.99, img: "https://m.media-amazon.com/images/I/PLACEHOLDER12.jpg", link: "YOUR_AFFILIATE_LINK_FILTERS" }
+                ]
+            },
+            'frenchpress': {
+                name: "French Press (The Rich & Simple Classic)",
+                kit_title: "French Press",
+                description: "You prefer a full, rich body and the ability to make a big batch easily. This method is forgiving and delivers a deeply satisfying cup.",
+                gear: [
+                    { name: "Large French Press (Insulated)", price: 45.99, img: "https://m.media-amazon.com/images/I/PLACEHOLDER13.jpg", link: "YOUR_AFFILIATE_LINK_10_FRENCH_PRESS" },
+                    { name: "Coarse Grind Manual Grinder", price: 49.00, img: "https://m.media-amazon.com/images/I/PLACEHOLDER14.jpg", link: "YOUR_AFFILIATE_LINK_11_MANUAL_GRINDER" },
+                    { name: "Coffee Timer", price: 12.99, img: "https://m.media-amazon.com/images/I/PLACEHOLDER15.jpg", link: "YOUR_AFFILIATE_LINK_TIMER" },
+                    { name: "Serving Carafe", price: 30.50, img: "https://m.media-amazon.com/images/I/PLACEHOLDER16.jpg", link: "YOUR_AFFILIATE_LINK_CARAFE" }
+                ]
+            }
+        };
+
+        // --- 2. FIXED ACCESSORY DATA (You MUST edit the objects within this section) ---
+        const accessoryProducts = [
+            { name: "Minimalist Clay Coffee Mug", price: 19.95, img: "https://m.media-amazon.com/images/I/PLACEHOLDER17.jpg", link: "YOUR_AFFILIATE_LINK_MUG" },
+            { name: "Precision Digital Coffee Scale", price: 45.00, img: "https://m.media-amazon.com/images/I/PLACEHOLDER18.jpg", link: "YOUR_AFFILIATE_LINK_SCALE" },
+            { name: "Acacia Wood Drip Tray", price: 29.99, img: "https://m.media-amazon.com/images/I/PLACEHOLDER19.jpg", link: "YOUR_AFFILIATE_LINK_TRAY" },
+            { name: "Airtight Coffee Bean Container", price: 24.50, img: "https://m.media-amazon.com/images/I/PLACEHOLDER20.jpg", link: "YOUR_AFFILIATE_LINK_STORAGE" },
+            { name: "Measuring Scoop with Clip", price: 9.99, img: "https://m.media-amazon.com/images/I/PLACEHOLDER21.jpg", link: "YOUR_AFFILIATE_LINK_SCOOP" }
+        ];
+
+        // --- 3. FIXED HIGH-TICKET DATA (You MUST edit the objects within this section) ---
+        const highTicketProducts = [
+            // Note: The Breville Bambino is placed here for demonstration, as it's a high-ticket item
+            { name: "Breville Bambino Espresso Machine", price: 299.95, img: "https://m.media-amazon.com/images/I/61egYXcL9OL._AC_SL1500_.jpg", link: "https://amzn.to/4ay0vft" },
+            { name: "The Prosumer Dual Boiler", price: 1499.00, img: "https://m.media-amazon.com/images/I/PLACEHOLDER23.jpg", link: "YOUR_AFFILIATE_LINK_HIGHTICKET_2" },
+            { name: "Mid-Range All-in-One Brewer", price: 450.00, img: "https://m.media-amazon.com/images/I/PLACEHOLDER24.jpg", link: "YOUR_AFFILIATE_LINK_HIGHTICKET_3" }
+        ];
+
+
+        // --- INITIAL RENDER OF FIXED CAROUSELS ---
+        // Run this once when the page loads
+        renderCarousel(accessoryCarousel, accessoryProducts);
+        renderCarousel(highTicketCarousel, highTicketProducts);
+
+
+        // --- Calculation Logic (Same as before) ---
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // 1. Gather inputs
+            const time = form.elements['time'].value;
+            const flavor = form.elements['flavor'].value;
+            const volume = form.elements['volume'].value;
+
+            let resultMethod = 'aeropress'; 
+
+            if (time === 'quick') {
+                if (flavor === 'strong' && volume === 'single') {
+                    resultMethod = 'espresso';
+                } else {
+                    resultMethod = 'aeropress';
+                }
+            } else if (time === 'slow') {
+                resultMethod = 'pourover'; 
+            } else { // Moderate time
+                if (flavor === 'clean' || volume === 'single') {
+                    resultMethod = 'aeropress';
+                } else if (flavor === 'rich' || volume === 'multiple') {
+                    resultMethod = 'frenchpress';
+                } else {
+                    resultMethod = 'aeropress';
+                }
+            }
+
+            // 2. Display Results
+            displayResults(brewMethods[resultMethod]);
+        });
+
+        function displayResults(method) {
+            // Update Method Name and Description
+            finalMethodName.textContent = method.name;
+            methodDescription.textContent = method.description;
+            kitName.textContent = method.kit_title;
+
+            // Render the Dynamic Recommended Kit Carousel
+            renderCarousel(recommendedKitCarousel, method.gear);
+
+            // Show the results section
+            resultsDiv.style.display = 'block';
+
+            // Smooth scroll to the results
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
